@@ -135,6 +135,26 @@ namespace TestORMCodeFirst.DAL
             // Assert
             Assert.Equal(5, NbInscriptions);
         }
+        [Fact]
+        public void MettreAJourNoteFinale()
+        {
+            //Arrange
+            SetUp();
+            Etudiant etud = new Etudiant { Nom = "Simard", Prenom = "Serge", DateNaissance = Convert.ToDateTime("1997-10-10"), NoProgramme = 420 };
+            short noteAAjouter = 70;
+            repoEtudiants.AjouterEtudiant(etud);
+            string session = "H21";
+            string codeCours = "W49";
+            repoInscriptions.AjouterInscription(etud.EtudiantID, codeCours, session);
+
+            //Act
+            repoInscriptions.MettreAJourNoteFinale(etud.EtudiantID , codeCours, session, noteAAjouter);
+
+            //Assert
+            InscriptionCours insc = repoInscriptions.ObtenirInscription(etud.EtudiantID, codeCours, session);
+            Assert.NotNull(insc.NoteFinale);
+            Assert.Equal(noteAAjouter, insc.NoteFinale);
+        }
 
     }
 }
